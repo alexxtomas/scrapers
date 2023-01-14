@@ -2,19 +2,25 @@
   "name": "scrapping-alberto",
   "version": "1.0.0",
   "description": "",
-  "type":"module",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mongoose": "6.8.3",
-    "puppeteer": "19.5.2"
+    "cheerio": "^1.0.0-rc.12",
+    "mongoose": "6.8.3"
   },
   "eslintConfig": {
-    "extends": "./node_modules/standard/eslintrc.json"
+    "extends": "./node_modules/standard/",
+    "rules": {
+      "space-before-function-paren": 0
+    }
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
   }
 }

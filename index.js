@@ -1,84 +1,23 @@
-import { connect as _connect, model, Schema } from 'mongoose';
-import { launch } from "puppeteer";
+import fs from 'node:fs/promises'
+import { connectToDb } from './db_connection.js'
 
+// URL de la página web que queremos scrappear
 
-// Crear un modelo de datos
-const Data = model('Data', new Schema({
-  title: String,
-  price: String
-}))
+function createAValidURL(VALUE_TO_SEARCH) {
+  const formattedValue = VALUE_TO_SEARCH.replaceAll(' ', '+')
+  const URL = `https://www.amazon.es/s?k=${formattedValue}&__mk_es_ES=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=HO2ZT0SG9A2F&sprefix=${formattedValue}%2Caps%2C119&ref=nb_sb_noss_1`
+  return URL
+}
 
+const URL = createAValidURL('productos de limpieza')
 
+console.log(URL)
+// const VALUE_TO_SEARCH = 'star wars'
+// const URL = `https://www.amazon.es/s?k=${VALUE_TO_SEARCH}&__mk_es_ES=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=HO2ZT0SG9A2F&sprefix=${VALUE_TO_SEARCH}%2Caps%2C119&ref=nb_sb_noss_1`
 
-// Función para extraer los datos
-const scrapeCharacters = async () => {
-  // Conectar a la base de datos
-  await connect();
+// Añadimos los productos que queremos scrappear
+// const PRODUCTS = 'star wars'
 
-  // URL de la página web
-  const url = "https://www.amazon.es/";
+// const pageHTML = await fetch(URL).then((res) => res.text())
 
-  // Iniciar el navegador
-  const browser = await launch({
-    headless: false,
-    defaultViewport: null,
-    args: ['--start-maximized']
-  })
-
-  // Abrir una nueva pestaña
-  const page = await browser.newPage()
-
-  // Ir a la URL
-  await page.goto(url);
-
-  // Escribir en el buscador
-  await page.type("#twotabsearchtextbox", "star wars");
-  // Hacer click en el botón de búsqueda
-  await page.click("#nav-search-submit-button");
-  // Esperar a que se cargue la página  
-  await page.waitForSelector(".s-pagination-next");
-
-  // Scroll through products
-  await page.click(".s-pagination-next");
-  await page.waitForSelector(".s-pagination-next");
-
-
-  // Extraer los datos
-  const title = await page.$$eval("h2 span.a-color-base", (nodes) =>
-    nodes.map((n) => n.innerText)
-  );
-
-  const price = await page.$$eval(
-    "[data-component-type='s-search-result'] span.a-price[data-a-color='base'] span.a-offscreen",
-    (nodes) => nodes.map((n) => n.innerText)
-  );
-
-  // Crear un array con los datos
-  const amazonSearchArray = title.slice(0, 5).map((value, index) => {
-    return {
-      title: title[index],
-      price: price[index],
-    };
-  });
-
-  // Convertir el array a JSON
-  const jsonData = JSON.stringify(amazonSearchArray, null, 2);
-
-  // Guardar los datos en la base de datos
-  JSON.parse(jsonData).map(async (data) => {
-    const dataSchema = new Data(data);
-    try {
-      await dataSchema.save();
-      console.log(`Successfully saved ${dataSchema.title} to the database`);
-    } catch (error) {
-      console.error(`Failed to save ${dataSchema.title} to the database:`, error);
-    }
-  });
-
-  // Cerrar el navegador
-  await browser.close();
-  console.log('Characters saved successfully!', jsonData);
-
-};
-
-scrapeCharacters();
+// console.log(pageHTML)
