@@ -1,26 +1,17 @@
 {
-  "name": "scrapping-alberto",
+  "name": "scrapping-amazon",
   "version": "1.0.0",
   "description": "",
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.12",
+    "cheerio": "1.0.0-rc.12",
     "mongoose": "6.8.3"
-  },
-  "eslintConfig": {
-    "extends": "./node_modules/standard/",
-    "rules": {
-      "space-before-function-paren": 0
-    }
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.20"
   }
 }
