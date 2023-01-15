@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 import { scrapeProducts } from './amazon_scraper.js'
 import { connectToDb } from './db_connection.js'
 import { Product } from './product_model.js'
@@ -28,7 +27,6 @@ await connectToDb(URI)
 scrapeProducts(URL).then(async (products) => {
   console.log(`Fetched ${products.length} products successfully✅`)
   console.log('Saving to database...🤖')
-
   await Product.insertMany(products)
     .then(() => console.log('Products saved succesfully to database✅'))
     .catch((err) => {
