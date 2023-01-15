@@ -7,7 +7,7 @@ const URI =
 // Nos conectamos a la base de datos
 export async function connectToDb() {
   try {
-    await mongoose.set('strictQuery', false).connect(URI, { useNewUrlParser: true })
+    await mongoose.connect(URI, { useNewUrlParser: true }).set('strictQuery', false)
     console.log('Connected to the DB 👀')
   } catch (error) {
     console.error('Failed to connect to the DB 💔', error)
