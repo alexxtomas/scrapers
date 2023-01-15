@@ -14,6 +14,9 @@
     "cheerio": "1.0.0-rc.12",
     "mongoose": "6.8.3"
   },
+  "bin": {
+    "scraperAmazon": "./index.js"
+  },
   "devDependencies": {
     "standard": "^17.0.0"
   },
