@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-import { scrapeProducts } from './amazon_scraper.js'
 import { connectToDb } from './db_connection.js'
 import { Product } from './product_model.js'
+import { scrapeProducts } from './scraper.js'
 
 const [, , ...productToSearch] = process.argv
 
