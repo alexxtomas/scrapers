@@ -48,7 +48,7 @@ export async function scrapeProducts(URL) {
     })
     return products
   } catch (err) {
-    console.error('Something went wrong when fetching the data ❌')
+    console.error('Something went wrong when scraping the data ❌')
     throw err
   }
 }
