@@ -1,9 +1,9 @@
 import { load } from 'cheerio'
 
-export async function scrapeProducts(url) {
+export async function scrapeProducts(URL) {
   console.log('Fetching Products...🤖')
   try {
-    const response = await fetch(url)
+    const response = await fetch(URL)
     const html = await response.text()
     const $ = load(html)
 
