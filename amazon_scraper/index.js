@@ -21,6 +21,7 @@ const productForURL = productToSearch[0].replaceAll(' ', '+')
 const productForURI = productToSearch[0].replaceAll(' ', '_')
 
 const URL = `https://www.amazon.es/s?k=${productForURL}&crid=2M8FD9OZE91ZJ&sprefix=%2Caps%2C92&ref=nb_sb_ss_recent_1_0_recent`
+// Debes cambiar la URI por la tuya y añadir Amazon_${productForURI} como esta añadido en este ejemplo
 const URI = `mongodb+srv://root:root@cluster0.fvg4s0k.mongodb.net/Amazon_${productForURI}?retryWrites=true&w=majority`
 
 await connectToDb(URI)
