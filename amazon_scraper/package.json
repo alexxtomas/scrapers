@@ -1,5 +1,5 @@
 {
-  "name": "scrapping-amazon",
+  "name": "amazon_scraper",
   "version": "1.0.0",
   "description": "",
   "type": "module",
