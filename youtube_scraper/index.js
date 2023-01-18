@@ -45,110 +45,67 @@ export async function scrape() {
     return videos
   })
 
-  console.log(videos)
-
-  if (!videos.length) {
+  const totalVideos = videos.length
+  if (!totalVideos) {
     console.error('Something went wrong, please try again❌')
     process.exit(1)
   }
 
-  const totalVideos = videos.length
-
   console.log(`Saving ${totalVideos} videos. This may take a long time, please wait.🤖`)
 
-  // console.log(await ytdl.getInfo(videos[0].link))
-  const videosInfo = []
+  const authors = []
 
   for (const i in videos) {
     const video = videos[i]
     const { link } = video
-    await ytdl
-      .getInfo(link)
-      .then(
-        ({
-          description,
-          lengthSeconds: videoDuration,
-          isFamilySafe,
-          viewCount,
-          category,
-          publishDate,
-          keywords,
-          author,
-          isPrivate,
-          isLiveContent,
-          likes,
-          dislikes,
-          age_restricted: ageRestricted
-        }) => {
-          videos[i] = {
-            ...video,
-            description,
-            videoDuration,
-            isFamilySafe,
-            viewCount,
-            category,
-            publishDate,
-            keywords,
-            author: {
-              name: author?.name,
-              user: author?.user,
-              channelURL: author?.channel_url,
-              userURL: author?.user_url,
-              verified: author?.verified,
-              suscribers: author?.suscriber_count
-            },
-            isPrivate,
-            isLiveContent,
-            likes,
-            dislikes,
-            ageRestricted
-          }
-        }
-      )
+    const { videoDetails } = await ytdl.getInfo(link)
+    const {
+      description,
+      lengthSeconds: videoDuration,
+      isFamilySafe,
+      viewCount,
+      category,
+      publishDate,
+      keywords,
+      isPrivate,
+      isLiveContent,
+      likes,
+      dislikes,
+      age_restricted: ageRestricted,
+      video_url: videoURL
+    } = videoDetails
+    videos[i] = {
+      ...video,
+      description,
+      videoDuration,
+      isFamilySafe,
+      viewCount,
+      category,
+      publishDate,
+      keywords: keywords ?? [],
+      isPrivate,
+      isLiveContent,
+      likes: likes ?? 'Unknown',
+      dislikes: dislikes ?? 'Unknown',
+      ageRestricted,
+      videoURL
+    }
+    const {
+      name,
+      user,
+      channel_url: channelURL,
+      user_url: userURL,
+      verified,
+      subscriber_count: subscribers
+    } = videoDetails.author
+    authors[i] = {
+      name,
+      user,
+      channelURL,
+      userURL,
+      verified,
+      subscribers: subscribers.toString()
+    }
   }
-  console.log(videos)
-  // const formattedInfo = videosInfo.map(
-  //   ({
-  //     title,
-  //     description,
-  //     lengthSeconds,
-  //     isFamilySafe,
-  //     viewCount,
-  //     category,
-  //     publishDate,
-  //     keywords,
-  //     author,
-  //     isPrivate,
-  //     isLiveContent,
-  //     likes,
-  //     dislikes,
-  //     age_restricted,
-  //     video_url
-  //   }) => ({
-  //     title,
-  //     description,
-  //     videoDuration: lengthSeconds,
-  //     isFamilySafe,
-  //     viewCount,
-  //     category,
-  //     publishDate,
-  //     keywords,
-  //     author: {
-  //       name: author?.name ?? 'Unknown',
-  //       user: author?.user ?? 'Unknown',
-  //       channelURL: author?.channel_url ?? 'Unknown',
-  //       userURL: author?.user_url ?? 'Unknown',
-  //       verified: author?.verified ?? 'Unknown',
-  //       suscribers: author?.suscriber_count ?? 'Unknown'
-  //     },
-  //     isPrivate,
-  //     isLiveContent,
-  //     likes: likes ?? 'Unknown',
-  //     dislikes: dislikes ?? 'Unknown',
-  //     ageRestricted: age_restricted,
-  //     videoURL: video_url
-  //   })
-  // )
-  // console.log(formattedInfo)
 }
 scrape()
