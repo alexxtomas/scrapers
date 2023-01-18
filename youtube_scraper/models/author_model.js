@@ -7,7 +7,7 @@ const authorSchema = new Schema(
     channelURL: { type: String, required: true },
     userURL: { type: String, required: true },
     verified: { type: Boolean, required: true },
-    suscribers: { type: String, required: true }
+    subscribers: { type: String, required: true }
   },
   {
     timestamps: true,
