@@ -6,17 +6,17 @@ const videoSchema = new Schema(
     description: { type: String, required: true, default: '' },
     videoDuration: { type: String, required: true },
     isFamilySafe: { type: Boolean, required: true },
-    viewCount: { type: Number, required: true },
+    viewCount: { type: String, required: true },
     category: { type: String, required: true },
     publishDate: { type: String, required: true },
     keywords: { type: [String], required: true },
     author: { type: Schema.Types.ObjectId, required: true },
     isPrivate: { type: Boolean, required: true },
-    isLoveContent: { type: Boolean, required: true },
-    likes: { type: Number, required: true },
-    dislikes: { type: Number, required: true },
+    isLiveContent: { type: Boolean, required: true },
+    likes: { type: String, required: true },
+    dislikes: { type: String, required: true },
     ageRestricted: { type: Boolean, required: false },
-    videoURL: { type: String, required: true }
+    link: { type: String, required: true }
   },
   {
     timestamps: true,
