@@ -7,7 +7,8 @@ const authorSchema = new Schema(
     channelURL: { type: String, required: true },
     userURL: { type: String, required: true },
     verified: { type: Boolean, required: true },
-    subscribers: { type: String, required: true }
+    subscribers: { type: String, required: true },
+    videos: { type: Schema.Types.ObjectId, required: true, ref: 'Video' }
   },
   {
     timestamps: true,
