@@ -10,7 +10,7 @@ const videoSchema = new Schema(
     category: { type: String, required: true },
     publishDate: { type: String, required: true },
     keywords: { type: [String], required: true },
-    author: { type: Schema.Types.ObjectId, required: true },
+    author: { type: Schema.Types.ObjectId, required: true, ref: 'Author' },
     isPrivate: { type: Boolean, required: true },
     isLiveContent: { type: Boolean, required: true },
     likes: { type: String, required: true },
