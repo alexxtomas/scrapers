@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import fs from 'node:fs'
+/* eslint-disable camelcase */
 import puppeteer from 'puppeteer'
 import ytdl from 'ytdl-core'
 
@@ -51,12 +51,104 @@ export async function scrape() {
     console.error('Something went wrong, please try again❌')
     process.exit(1)
   }
-  ytdl(videos[0].link, { quality: 'lowest' }).pipe(fs.createWriteStream())
 
-  // for (const link of videoLinks) {
-  //   const videoInfo = await ytdl.getInfo(link)
-  //   console.log(videoInfo)
-  //   // ytdl(link, { quality: 'lowest',  })
-  // }
+  const totalVideos = videos.length
+
+  console.log(`Saving ${totalVideos} videos. This may take a long time, please wait.🤖`)
+
+  // console.log(await ytdl.getInfo(videos[0].link))
+  const videosInfo = []
+
+  for (const i in videos) {
+    const video = videos[i]
+    const { link } = video
+    await ytdl
+      .getInfo(link)
+      .then(
+        ({
+          description,
+          lengthSeconds: videoDuration,
+          isFamilySafe,
+          viewCount,
+          category,
+          publishDate,
+          keywords,
+          author,
+          isPrivate,
+          isLiveContent,
+          likes,
+          dislikes,
+          age_restricted: ageRestricted
+        }) => {
+          videos[i] = {
+            ...video,
+            description,
+            videoDuration,
+            isFamilySafe,
+            viewCount,
+            category,
+            publishDate,
+            keywords,
+            author: {
+              name: author?.name,
+              user: author?.user,
+              channelURL: author?.channel_url,
+              userURL: author?.user_url,
+              verified: author?.verified,
+              suscribers: author?.suscriber_count
+            },
+            isPrivate,
+            isLiveContent,
+            likes,
+            dislikes,
+            ageRestricted
+          }
+        }
+      )
+  }
+  console.log(videos)
+  // const formattedInfo = videosInfo.map(
+  //   ({
+  //     title,
+  //     description,
+  //     lengthSeconds,
+  //     isFamilySafe,
+  //     viewCount,
+  //     category,
+  //     publishDate,
+  //     keywords,
+  //     author,
+  //     isPrivate,
+  //     isLiveContent,
+  //     likes,
+  //     dislikes,
+  //     age_restricted,
+  //     video_url
+  //   }) => ({
+  //     title,
+  //     description,
+  //     videoDuration: lengthSeconds,
+  //     isFamilySafe,
+  //     viewCount,
+  //     category,
+  //     publishDate,
+  //     keywords,
+  //     author: {
+  //       name: author?.name ?? 'Unknown',
+  //       user: author?.user ?? 'Unknown',
+  //       channelURL: author?.channel_url ?? 'Unknown',
+  //       userURL: author?.user_url ?? 'Unknown',
+  //       verified: author?.verified ?? 'Unknown',
+  //       suscribers: author?.suscriber_count ?? 'Unknown'
+  //     },
+  //     isPrivate,
+  //     isLiveContent,
+  //     likes: likes ?? 'Unknown',
+  //     dislikes: dislikes ?? 'Unknown',
+  //     ageRestricted: age_restricted,
+  //     videoURL: video_url
+  //   })
+  // )
+  // console.log(formattedInfo)
 }
 scrape()
