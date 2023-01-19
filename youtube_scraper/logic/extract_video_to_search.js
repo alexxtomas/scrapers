@@ -16,5 +16,3 @@ export function extractVideoToSearch() {
 
   return { videoToSearch, formattedVideoToSearch: videoToSearch.replaceAll(' ', '_') }
 }
-
-extractVideoToSearch()
