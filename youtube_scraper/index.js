@@ -70,10 +70,7 @@ import { log } from './logic/log.js'
     const video = videos[i]
     const { link } = video
     const { videoDetails } = await ytdl.getInfo(link)
-    if (!videoDetails.description) {
-      console.log(video.title)
-      console.log(videoDetails.description)
-    }
+
     const {
       name,
       user,
