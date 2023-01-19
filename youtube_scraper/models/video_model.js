@@ -3,7 +3,7 @@ import { model, Schema } from 'mongoose'
 const videoSchema = new Schema(
   {
     title: { type: String, required: true },
-    description: { type: String, required: true, default: '' },
+    description: { type: String },
     videoDuration: { type: String, required: true },
     isFamilySafe: { type: Boolean, required: true },
     viewCount: { type: String, required: true },
