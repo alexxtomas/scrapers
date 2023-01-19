@@ -1,6 +1,6 @@
 import { Author } from '../../models/author_model.js'
 import { Video } from '../../models/video_model.js'
-import { log } from '../log'
+import { log } from '../log.js'
 export async function saveDataToDb({ authors, videos }) {
   Promise.all([await Author.insertMany(authors), await Video.insertMany(videos)])
     .then(() => {
