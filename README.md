@@ -42,16 +42,6 @@ Esta manera de hacer scraping es la menos eficiente ya que cada vez que tenemos 
 
 Pero por otro lado esta muy guay ya que es muy visual por que podemos visualizar como el navegador va ejecutando las instrucciones que recibe.
 
-## Antes de empezar…
-
----
-
-Si te es difícil seguir el paso a paso o algo no te funciona correctamente tienes el código ya resuelto y totalmente funcional en este repositorio.
-
-[https://github.com/alexxtomas/scrapers](https://github.com/alexxtomas/scrapers)
-
-Contiene tanto el scraper de Amazon como el de Youtube.
-
 ## Realizando scraping a Amazon
 
 ---
