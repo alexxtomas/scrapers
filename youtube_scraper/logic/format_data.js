@@ -38,7 +38,6 @@ export async function formatData({ authors, videos }) {
         video_url: videoURL
       } = videoDetails
       videos[i] = {
-        // author: authors[i],
         ...video,
         description: description ?? '',
         videoDuration: `${videoDuration} seconds`,
