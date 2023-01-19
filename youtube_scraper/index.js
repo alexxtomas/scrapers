@@ -3,10 +3,9 @@
 import puppeteer from 'puppeteer'
 import ytdl from 'ytdl-core'
 import { connectToDb } from './db_connection.js'
+import { log } from './log.js'
 import { Author } from './models/author_model.js'
 import { Video } from './models/video_model.js'
-
-const PREFIX = 'Youtube Scraper 🤖 - '
 
 export async function scrape() {
   const searchValue = 'really short videos'
@@ -16,7 +15,8 @@ export async function scrape() {
     '_'
   )}?retryWrites=true&w=majority`
 
-  console.log(PREFIX, 'Configuring the browser')
+  log({ message: 'Configuring the browser' })
+
   const browser = await puppeteer.launch({
     headless: false,
     defaultViewport: null,
@@ -24,33 +24,32 @@ export async function scrape() {
   })
 
   // Abrir una nueva pestaña
-  console.log(PREFIX, 'Opening the browser')
+  log({ message: 'Opening the browser' })
   const page = await browser.newPage()
 
   // Ir a la URL
-  console.log(PREFIX, 'Going to youtube')
+  log({ message: 'Going to youtube' })
   await page.goto('https://www.youtube.com')
 
-  console.log(PREFIX, 'Accepting youtube cookies')
+  log({ message: 'Accepting youtube cookies' })
   const acceptAllButton = await page.waitForSelector(
     'button[aria-label="Accept the use of cookies and other data for the purposes described"]'
   )
   await acceptAllButton.click()
 
   await page.waitForNavigation()
-  console.log(PREFIX, 'Typing in the serach bar')
+  log({ message: 'Typing in the serach bar' })
   const searchInput = await page.$('input#search')
 
   await searchInput.type(searchValue)
 
-  console.log(PREFIX, 'Clicking on the search button')
+  log({ message: 'Clicking on the search button' })
   await page.waitForFunction(`document.querySelector('input#search').value === '${searchValue}'`)
 
   await page.click('button#search-icon-legacy')
 
   await page.waitForNetworkIdle()
-
-  console.log(PREFIX, 'Selecting the videos')
+  log({ message: 'Selecting the videos' })
   const videos = await page.evaluate(() => {
     const videoElements = document.querySelectorAll('.ytd-video-renderer #video-title')
     const videos = []
@@ -62,13 +61,12 @@ export async function scrape() {
   })
 
   const totalVideos = videos.length
-  console.log(PREFIX, `${totalVideos} selected`)
+  log({ message: `${totalVideos} selected` })
   if (!totalVideos) {
-    console.error(PREFIX, 'Something went wrong, please try again❌')
+    log({ message: 'Something went wrong, please try again ❌', err: true })
     process.exit(1)
   }
-
-  console.log(PREFIX, 'Formatting all the videos. This may take a while, please wait.')
+  log({ message: 'Formatting all the videos. This may take a while, please wait.' })
 
   const authors = []
 
@@ -125,18 +123,18 @@ export async function scrape() {
       videoURL
     }
   }
-  console.log(PREFIX, 'Videos formatted successfully!')
-  console.log(PREFIX, 'Connecting to database...')
+  log({ message: 'Videos formatted successfully!' })
+  log({ message: 'Connecting to database...' })
 
   await connectToDb(URI)
 
-  console.log(PREFIX, 'Saving videos to database!. This may taye a while, please wait. ')
+  log({ message: 'Saving videos to database!. This may taye a while, please wait.' })
   await Promise.all([await Video.insertMany(videos), await Author.insertMany(authors)])
     .then(() => {
-      console.log(PREFIX, 'Inserted %d videos and %d authors', videos.length, authors.length)
+      log({ message: `Inserted %d videos and %d authors ${videos.length} ${authors.length}` })
     })
     .catch((err) => {
-      console.error(PREFIX, 'Error while saving data to database ❌')
+      log({ message: 'Error while saving data to database ❌', err: true })
       throw err
     })
 }
