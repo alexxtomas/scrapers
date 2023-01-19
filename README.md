@@ -530,6 +530,7 @@ const videoSchema = new Schema(
 )
 
 export const Video = model('Video', videoSchema)
+
 ```
 
 ## Creamos la lógica de nuestra aplicación
