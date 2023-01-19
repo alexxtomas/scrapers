@@ -3,11 +3,9 @@
 import puppeteer from 'puppeteer'
 import ytdl from 'ytdl-core'
 import { connectToDb } from './logic/db/db_connection.js'
+import { saveDataToDb } from './logic/db/save_data_to_db.js'
 import { log } from './logic/log.js'
-import { Author } from './models/author_model.js'
-import { Video } from './models/video_model.js'
-
-export async function scrape() {
+;(async () => {
   const searchValue = 'really short videos'
 
   const URI = `mongodb+srv://root:root@cluster0.xmqbgxh.mongodb.net/${searchValue.replaceAll(
@@ -134,15 +132,5 @@ export async function scrape() {
   await connectToDb(URI)
 
   log({ message: 'Saving videos to database!. This may taye a while, please wait.' })
-  await Promise.all([await Video.insertMany(videos), await Author.insertMany(authors)])
-    .then(() => {
-      log({
-        message: 'All videos and their authors have been saved to the database successfully 🚀'
-      })
-    })
-    .catch((err) => {
-      log({ message: 'Error while saving data to database ❌', err: true })
-      throw err
-    })
-}
-scrape()
+  saveDataToDb({ authors, videos }).finally(() => process.exit(1))
+})()
