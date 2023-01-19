@@ -32,7 +32,7 @@ A diferencia de Amazon hay otras páginas la cuál no nos responden con el códi
 
 Por ejemplo si nos dirigimos a [Youtube](https://www.youtube.com/) y hacemos lo mismo que en el caso anterior, podremos ver que el HTML que vemos en la página no esta disponible al inspeccionar el código fuente.
 
-Esto es debido a que es una página dínamica.
+Esto es debido a que es una página dinámica.
 
 En este caso para hacer scraping en una página como esta necesitamos de una herramienta que nos permita levantar un navegador para ir seleccionando los elementos de la página.
 
@@ -325,7 +325,7 @@ El scraper va a recibir por argumentos el producto a buscar en Amazon, para acce
    import { scrapeProducts } from './scraper.js'
    ```
 
-2. Accedemos a los valores de `process.argv` y realizamos distintas comprobaciones para asegurarnos de que nuesto scraper funcione correctamente.
+2. Accedemos a los valores de `process.argv` y realizamos distintas comprobaciones para asegurarnos de que nuestro scraper funcione correctamente.
 
    ```jsx
    // ./amazon_scraper/index.js
@@ -419,7 +419,7 @@ Con esto podemos ejecutar el comando `npm link` en una terminal dentro de la car
 
 En este caso aplicamos el caso 2 debido a que [Youtube](https://www.youtube.com/) es una página dinámica y no contamos con el HTML al inspeccionar la página. Deberemos utilizar librerías como [Puppeteer](https://pptr.dev/).
 
-Qué es realmente Puppeteer ? Es una librería que nos proporciona una API de alto nivel con la cuál podemos controlar Chrome. De lo que trata este tipo de scraping es de levantar un navegador entero y controlarlo mediante la líbreria. Deberemos selecionar mediante selectores de css los elementos con los que queremos interactuar y el navegador interactuará con ellos como si de un usuario se tratase.
+Qué es realmente Puppeteer ? Es una librería que nos proporciona una API de alto nivel con la cuál podemos controlar Chrome. De lo que trata este tipo de scraping es de levantar un navegador entero y controlarlo mediante la librería. Deberemos seleccionar mediante selectores de CSS los elementos con los que queremos interactuar y el navegador interactuará con ellos como si de un usuario se tratase.
 
 Como en el anterior scraping que hemos hecho a Amazon necesitamos crear una carpeta y en ella inicializar un proyecto de Node. A esta carpeta yo le voy a llamar `youtube_scraper`.
 
@@ -429,7 +429,7 @@ Una vez hecho esto instalamos las dependencias que vamos a necesitar.
 npm i mongoose puppeteer ytdl-core
 ```
 
-[ytdl-core](https://github.com/fent/node-ytdl) es una libreria que nos permitirá obtener información de los videos de scrapemos para añadir esta información a nuestra base de datos. Esta libreria también nos permite descargar los videos asi que te puedes animar y crear un descargador de videos de Youtube.
+[ytdl-core](https://github.com/fent/node-ytdl) es una librería que nos permitirá obtener información de los videos de scrapemos para añadir esta información a nuestra base de datos. Esta librería también nos permite descargar los videos así que te puedes animar y crear un descargador de videos de Youtube.
 
 Posteriormente añadmis el linter.
 
@@ -462,7 +462,7 @@ El funcionamiento de este scraper va a ser igual que el del anterior, ejecutarem
 
 El código de nuestro scraper va a estar en el `index.js` dentro de una función autoejecutada. Este es el código que va a dar instrucciones al navegador, va a esperar a ciertos eventos y seleccionara elementos de Youtube mediante selectores de CSS. La otra parte del código como puede ser la conexión a la base de datos entre otras funcionalidades estarán separadas en una carpeta `logic` .
 
-También contaremos con una carpeta llamada `models` que contendra nuestros modelos de `Mongoose`.
+También contaremos con una carpeta llamada `models` que contendrá nuestros modelos de `Mongoose`.
 
 ### Creamos nuestros modelos
 
@@ -489,8 +489,7 @@ const authorSchema = new Schema(
     channelURL: { type: String, required: true },
     userURL: { type: String, required: true },
     verified: { type: Boolean, required: true },
-    subscribers: { type: String, required: true },
-    videos: [{ type: Schema.Types.ObjectId, ref: 'Video' }]
+    subscribers: { type: String, required: true }
   },
   {
     timestamps: true,
@@ -517,7 +516,6 @@ const videoSchema = new Schema(
     category: { type: String, required: true },
     publishDate: { type: String, required: true },
     keywords: { type: [String], required: true },
-    author: { type: Schema.Types.ObjectId, ref: 'Author' },
     isPrivate: { type: Boolean, required: true },
     isLiveContent: { type: Boolean, required: true },
     likes: { type: String, required: true },
@@ -534,7 +532,7 @@ const videoSchema = new Schema(
 export const Video = model('Video', videoSchema)
 ```
 
-## Creamos la lógica de nuestra apliación
+## Creamos la lógica de nuestra aplicación
 
 ---
 
@@ -554,7 +552,7 @@ touch db_connection.js
 touch save_data_to_db.js
 ```
 
-En el archivo `db_connection.js` crearemos la función que nos permitira conectarnos a la base de datos.
+En el archivo `db_connection.js` crearemos la función que nos permitirá conectarnos a la base de datos.
 
 ```jsx
 // ./youtube_scraper/logic/db/db_connection.js
@@ -706,7 +704,7 @@ export async function formatData({ authors, videos }) {
 
 ---
 
-Bien toca crear ya la funcionalidad que como en el caso del scraper de Amazon nos permita obtener los datos de la página. Solo vamos a obtener el titulo y el link de todos los videos que aparezcan en resultados cuando realicemos la busqueda mediante este metodo. Los demás datos los vamos a obtener con la función creada anteriormete la cuál se encuentra en el archivo `format_data.js` , en esta le pasamos el link de los videos que hemos scrapeado y esta obtiene y formatea todos los datos de los videos.
+Bien toca crear ya la funcionalidad que como en el caso del scraper de Amazon nos permita obtener los datos de la página. Solo vamos a obtener el titulo y el link de todos los videos que aparezcan en resultados cuando realicemos la búsqueda mediante este método. Los demás datos los vamos a obtener con la función creada anteriormente la cuál se encuentra en el archivo `format_data.js` , en esta le pasamos el link de los videos que hemos scrapeado y esta obtiene y formatea todos los datos de los videos.
 
 Vamos a scrapear los datos para ello en el `index.js` creamos una función autoejecutada, en la cuál ejecutaremos toda la lógica de nuestro scraping e iremos ejecutando las funciones previamente creadas.
 
@@ -802,7 +800,7 @@ import { log } from './logic/log.js'
 })()
 ```
 
-Y listo para usarlo podemos debemos ejectuar dentro de nuestra carpeta `youtube_scraper` el comando `npm link` y a partir de ahora ejecutando en nuestra terminal `youtubeScraper` podremos scrapear los datos que queramos. Por ejemplo para scrapear videos sobre star wars realizaremos lo siguiente.
+Y listo para usarlo podemos debemos ejecutar dentro de nuestra carpeta `youtube_scraper` el comando `npm link` y a partir de ahora ejecutando en nuestra terminal `youtubeScraper` podremos scrapear los datos que queramos. Por ejemplo para scrapear videos sobre star wars realizaremos lo siguiente.
 
 ```bash
 youtubeScraper "star wars"
