@@ -4,14 +4,12 @@ import puppeteer from 'puppeteer'
 import ytdl from 'ytdl-core'
 import { connectToDb } from './logic/db/db_connection.js'
 import { saveDataToDb } from './logic/db/save_data_to_db.js'
+import { extractVideoToSearch } from './logic/extract_video_to_search.js'
 import { log } from './logic/log.js'
 ;(async () => {
-  const searchValue = 'really short videos'
+  const { videoToSearch, formattedVideoToSearch } = extractVideoToSearch()
 
-  const URI = `mongodb+srv://root:root@cluster0.xmqbgxh.mongodb.net/${searchValue.replaceAll(
-    ' ',
-    '_'
-  )}?retryWrites=true&w=majority`
+  const URI = `mongodb+srv://root:root@cluster0.xmqbgxh.mongodb.net/${formattedVideoToSearch}?retryWrites=true&w=majority`
 
   log({ message: 'Configuring the browser' })
 
@@ -39,10 +37,10 @@ import { log } from './logic/log.js'
   log({ message: 'Typing in the serach bar' })
   const searchInput = await page.$('input#search')
 
-  await searchInput.type(searchValue)
+  await searchInput.type(videoToSearch)
 
   log({ message: 'Clicking on the search button' })
-  await page.waitForFunction(`document.querySelector('input#search').value === '${searchValue}'`)
+  await page.waitForFunction(`document.querySelector('input#search').value === '${videoToSearch}'`)
 
   await page.click('button#search-icon-legacy')
 
@@ -72,7 +70,6 @@ import { log } from './logic/log.js'
     const video = videos[i]
     const { link } = video
     const { videoDetails } = await ytdl.getInfo(link)
-    // console.log(videoDetails.description)
     if (!videoDetails.description) {
       console.log(video.title)
       console.log(videoDetails.description)
