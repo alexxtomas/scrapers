@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 import puppeteer from 'puppeteer'
 import ytdl from 'ytdl-core'
-import { connectToDb } from './logic/db_connection.js'
+import { connectToDb } from './logic/db/db_connection.js'
 import { log } from './logic/log.js'
 import { Author } from './models/author_model.js'
 import { Video } from './models/video_model.js'
