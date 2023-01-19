@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /* eslint-disable camelcase */
 import puppeteer from 'puppeteer'
-import ytdl from 'ytdl-core'
 import { connectToDb } from './logic/db/db_connection.js'
 import { saveDataToDb } from './logic/db/save_data_to_db.js'
 import { extractVideoToSearch } from './logic/extract_video_to_search.js'
+import { formatData } from './logic/format_data.js'
 import { log } from './logic/log.js'
 ;(async () => {
   const { videoToSearch, formattedVideoToSearch } = extractVideoToSearch()
@@ -66,65 +66,16 @@ import { log } from './logic/log.js'
 
   const authors = []
 
-  for (const i in videos) {
-    const video = videos[i]
-    const { link } = video
-    const { videoDetails } = await ytdl.getInfo(link)
-
-    const {
-      name,
-      user,
-      channel_url: channelURL,
-      user_url: userURL,
-      verified,
-      subscriber_count: subscribers
-    } = videoDetails.author
-    authors[i] = {
-      name,
-      user,
-      channelURL,
-      userURL,
-      verified,
-      subscribers: subscribers.toString()
-    }
-    const {
-      description,
-      lengthSeconds: videoDuration,
-      isFamilySafe,
-      viewCount,
-      category,
-      publishDate,
-      keywords,
-      isPrivate,
-      isLiveContent,
-      likes,
-      dislikes,
-      age_restricted: ageRestricted,
-      video_url: videoURL
-    } = videoDetails
-    videos[i] = {
-      // author: authors[i],
-      ...video,
-      description: description ?? '',
-      videoDuration: `${videoDuration} seconds`,
-      isFamilySafe,
-      viewCount,
-      category,
-      publishDate,
-      keywords: keywords ?? [],
-      isPrivate,
-      isLiveContent,
-      likes: likes ?? 'Unknown',
-      dislikes: dislikes ?? 'Unknown',
-      ageRestricted,
-      videoURL
-    }
-  }
+  await formatData({ authors, videos })
   log({ message: 'Videos formatted successfully!' })
   log({ message: 'Connecting to database...' })
 
   await connectToDb(URI)
 
   log({ message: 'Saving videos to database!. This may taye a while, please wait.' })
-  saveDataToDb({ authors, videos }).finally(() => process.exit(1))
+  await saveDataToDb({ authors, videos })
+  log({ message: 'Finsihed the scraping' })
+  setTimeout(() => {
+    process.exit(1)
+  }, 3000)
 })()
