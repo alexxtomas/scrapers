@@ -2,8 +2,8 @@
 /* eslint-disable camelcase */
 import puppeteer from 'puppeteer'
 import ytdl from 'ytdl-core'
-import { connectToDb } from './db_connection.js'
-import { log } from './log.js'
+import { connectToDb } from './logic/db_connection.js'
+import { log } from './logic/log.js'
 import { Author } from './models/author_model.js'
 import { Video } from './models/video_model.js'
 
@@ -74,6 +74,11 @@ export async function scrape() {
     const video = videos[i]
     const { link } = video
     const { videoDetails } = await ytdl.getInfo(link)
+    // console.log(videoDetails.description)
+    if (!videoDetails.description) {
+      console.log(video.title)
+      console.log(videoDetails.description)
+    }
     const {
       name,
       user,
@@ -106,10 +111,10 @@ export async function scrape() {
       video_url: videoURL
     } = videoDetails
     videos[i] = {
-      author: authors[i],
-      video,
-      description,
-      videoDuration,
+      // author: authors[i],
+      ...video,
+      description: description ?? '',
+      videoDuration: `${videoDuration} seconds`,
       isFamilySafe,
       viewCount,
       category,
@@ -131,7 +136,9 @@ export async function scrape() {
   log({ message: 'Saving videos to database!. This may taye a while, please wait.' })
   await Promise.all([await Video.insertMany(videos), await Author.insertMany(authors)])
     .then(() => {
-      log({ message: `Inserted %d videos and %d authors ${videos.length} ${authors.length}` })
+      log({
+        message: 'All videos and their authors have been saved to the database successfully 🚀'
+      })
     })
     .catch((err) => {
       log({ message: 'Error while saving data to database ❌', err: true })
