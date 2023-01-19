@@ -489,8 +489,7 @@ const authorSchema = new Schema(
     channelURL: { type: String, required: true },
     userURL: { type: String, required: true },
     verified: { type: Boolean, required: true },
-    subscribers: { type: String, required: true },
-    videos: [{ type: Schema.Types.ObjectId, ref: 'Video' }]
+    subscribers: { type: String, required: true }
   },
   {
     timestamps: true,
@@ -517,7 +516,6 @@ const videoSchema = new Schema(
     category: { type: String, required: true },
     publishDate: { type: String, required: true },
     keywords: { type: [String], required: true },
-    author: { type: Schema.Types.ObjectId, ref: 'Author' },
     isPrivate: { type: Boolean, required: true },
     isLiveContent: { type: Boolean, required: true },
     likes: { type: String, required: true },
@@ -532,6 +530,7 @@ const videoSchema = new Schema(
 )
 
 export const Video = model('Video', videoSchema)
+
 ```
 
 ## Creamos la lógica de nuestra apliación
