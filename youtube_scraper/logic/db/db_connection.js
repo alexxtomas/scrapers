@@ -1,6 +1,5 @@
 import mongoose from 'mongoose'
 
-// Nos conectamos a la base de datos
 export async function connectToDb(URI) {
   console.log('Connecting to database...🤖')
   await mongoose
