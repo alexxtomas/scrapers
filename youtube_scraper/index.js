@@ -9,6 +9,7 @@ import { log } from './logic/log.js'
 ;(async () => {
   const { videoToSearch, formattedVideoToSearch } = extractVideoToSearch()
 
+  // EXAMPLE, PASTE HERE YOUR URI
   const URI = `mongodb+srv://root:root@cluster0.xmqbgxh.mongodb.net/${formattedVideoToSearch}?retryWrites=true&w=majority`
 
   log({ message: 'Configuring the browser' })
@@ -19,11 +20,9 @@ import { log } from './logic/log.js'
     args: ['--start-maximized']
   })
 
-  // Abrir una nueva pestaña
   log({ message: 'Opening the browser' })
   const page = await browser.newPage()
 
-  // Ir a la URL
   log({ message: 'Going to youtube' })
   await page.goto('https://www.youtube.com')
 
@@ -44,7 +43,7 @@ import { log } from './logic/log.js'
 
   await page.click('button#search-icon-legacy')
 
-  await page.waitForNetworkIdle()
+  await page.waitForNavigation()
   log({ message: 'Selecting the videos' })
   const videos = await page.evaluate(() => {
     const videoElements = document.querySelectorAll('.ytd-video-renderer #video-title')
